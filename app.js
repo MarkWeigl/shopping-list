@@ -20,9 +20,11 @@ $(document).ready(function(){
 	// State modification functions
 	var addItem = function(state, item) {
 	    state.items.push(item);
+	    renderList(state, $('.shopping-list'));
 	    console.log(state.items);
-	};
-
+	    
+	};    
+	
 	var deleteItem = function(state, item) {
 		state.items.splice(state.items.indexOf(item),1);
 		console.log(state.items);
@@ -45,6 +47,7 @@ $(document).ready(function(){
 
 	$(document).on('click','.shopping-item-delete',function(){
 		var item = $(this).parent().parent().find('.shopping-item').text();
-		renderList(state, $('.shopping-list'));
+		renderList(state, $('.shopping-item'));
 	});
 });
+
