@@ -1,70 +1,72 @@
 $(document).ready(function(){
-	var state = {
-	    items: []
-	};
+    var state = {
+        items: []
+    };
+    
+    // State modification functions
+    var addItem = function(state, item) {
+        var itemObj = {};
+        itemObj.name = item;
+        itemObj.checked = false;
+        state.items.push(itemObj); 
+        console.log(state);  
+    };    
+    
+    var deleteItem = function(state, item) {
+        state.items.splice(item,1);
+    };
 
-	
+    var toggleItem = function(state, item) {
+        state.items[item].checked=true;
+    };
 
-	// State modification functions
-	var addItem = function(state, item) {
-	    state.items.push(item);
-	    console.log(state.items);
-	    
-	};    
-	
-	var deleteItem = function(state, item) {
-		state.items.splice(state.items.indexOf(item),1);
-		console.log(state.items);
-	};
+    // Render functions
+    var renderList = function(state, element) {
+        
+        var listItemTemplate="";
+        var itemsHTML = state.items.map(function(item, index) {
+          if (item.checked) {
+              listItemTemplate +='<li class="shopping-item shopping-item-checked" data-item="'+index+'">';
+          }
+          else {
+              listItemTemplate +='<li class="shopping-item" data-item="'+index+'">';
+          }
+          
+          listItemTemplate +='<span class="shopping-item">'+item.name+'</span>' +
+              '<div class="shopping-item-controls">' +
+                '<button class="shopping-item-toggle">' +
+                  '<span class="button-label">check</span>' +
+                '</button>' +
+                '<button class="shopping-item-delete">' +
+                  '<span class="button-label">delete</span>' +
+                '</button>' +
+              '</div>' +
+            '</li>';
+            return listItemTemplate;
+        });
+        
+        element.html(itemsHTML);
+    };
 
-	var toggleItem = function(state, item) {
-		state.items.toggleClass(state.item);
-		console.log(state.items);
+    // Event listeners
+    $('#js-shopping-list-form').submit(function(event) {
+        event.preventDefault();
+        addItem(state, $('#shopping-list-entry').val());
+        $('#shopping-list-entry').val("");
+        renderList(state, $('.shopping-list'));
+    });
 
-	};
+    $(document).on('click','.shopping-item-delete',function(){
+        var item = parseInt($(this).parent().parent().attr("data-item"));
+        deleteItem(state,item);
+        renderList(state, $('.shopping-list'));
+    });
 
-	// Render functions
-	var renderList = function(state, element) {
-	   console.log(state);
-	    var itemsHTML = state.items.map(function(item, index) {
-	    	var listItemTemplate = (
-	  '<li data-item="'+index+'">' +
-	    '<span class="shopping-item">'+item+'</span>' +
-	    '<div class="shopping-item-controls">' +
-	      '<button class="shopping-item-toggle">' +
-	        '<span class="button-label">check</span>' +
-	      '</button>' +
-	      '<button class="shopping-item-delete">' +
-	        '<span class="button-label">delete</span>' +
-	      '</button>' +
-	    '</div>' +
-	  '</li>'
-	);
-	       return listItemTemplate;
-	    });
-	    console.log(itemsHTML);
-	    element.html(itemsHTML);
-	};
-
-	// Event listeners
-	$('#js-shopping-list-form').submit(function(event) {
-	    event.preventDefault();
-	    addItem(state, $('#shopping-list-entry').val());
-	    $('#shopping-list-entry').val("");
-	    renderList(state, $('.shopping-list'));
-	});
-
-	$(document).on('click','.shopping-item-delete',function(){
-		var item = parseInt($(this).parent().parent().attr("data-item"));
-		deleteItem(state,item);
-		renderList(state, $('.shopping-list'));
-	});
-
-	$(document).on('click','.shopping-item-toggle',function(){
-		
-	
-		renderList(state, $('.shopping-list'));
-	});
+    $(document).on('click','.shopping-item-toggle',function(){
+        var item = parseInt($(this).parent().parent().attr("data-item"));
+        toggleItem(state,item);
+        renderList(state, $('.shopping-list'));
+    });
 
 });
 
