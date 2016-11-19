@@ -9,7 +9,7 @@ $(document).ready(function(){
         itemObj.name = item;
         itemObj.checked = false;
         state.items.push(itemObj); 
-        console.log(state);  
+        console.log(state);
     };    
     
     var deleteItem = function(state, item) {
@@ -23,8 +23,8 @@ $(document).ready(function(){
     // Render functions
     var renderList = function(state, element) {
         
-        var listItemTemplate="";
         var itemsHTML = state.items.map(function(item, index) {
+          var listItemTemplate="";
           if (item.checked) {
               listItemTemplate +='<li class="shopping-item shopping-item-checked" data-item="'+index+'">';
           }
